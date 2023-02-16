@@ -38,6 +38,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     EmisCaptureTheme {
-        Greeting("Android")
+        Greeting("Waliku EMIS")
     }
 }
