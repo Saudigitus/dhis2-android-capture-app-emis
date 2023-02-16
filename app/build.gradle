@@ -237,7 +237,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:${libraries.kotlinmetadata}"
-    
+
     implementation "androidx.annotation:annotation:${libraries.annotation}"
     implementation "androidx.cardview:cardview:${libraries.cardview}"
     implementation "androidx.legacy:legacy-support-v4:${libraries.legacysupport}"
