@@ -2,7 +2,6 @@ package org.dhis2.usescases.programEventDetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import org.dhis2.maps.layer.basemaps.BaseMapStyle
 import org.dhis2.maps.usecases.MapStyleConfiguration
@@ -21,7 +20,7 @@ class ProgramEventDetailViewModel(
     }
     private val _currentScreen = MutableLiveData(EventProgramScreen.LIST)
     val currentScreen: LiveData<EventProgramScreen>
-        get() = Transformations.distinctUntilChanged(_currentScreen)
+        get() = _currentScreen
 
     private val _backdropActive = MutableLiveData<Boolean>()
     val backdropActive: LiveData<Boolean> get() = _backdropActive
