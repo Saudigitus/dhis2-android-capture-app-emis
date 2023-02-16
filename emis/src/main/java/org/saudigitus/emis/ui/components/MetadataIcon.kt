@@ -20,19 +20,21 @@ fun MetadataIcon(
     backgroundColor: Color,
     size: Dp = 40.dp,
     paddingAll: Dp = 0.dp,
-    painter: Painter,
+    painter: Painter? = null,
     contentDescription: String? = null,
     colorFilter: ColorFilter? = null,
     modifier: Modifier = Modifier
 ) {
-    Image(
-        modifier = modifier
-            .clip(RoundedCornerShape(cornerShape))
-            .background(color = backgroundColor)
-            .size(size)
-            .padding(paddingAll),
-        painter = painter,
-        contentDescription = contentDescription,
-        colorFilter = colorFilter
-    )
+    if (painter != null) {
+        Image(
+            modifier = modifier
+                .clip(RoundedCornerShape(cornerShape))
+                .background(color = backgroundColor)
+                .size(size)
+                .padding(paddingAll),
+            painter = painter,
+            contentDescription = contentDescription,
+            colorFilter = colorFilter
+        )
+    }
 }
