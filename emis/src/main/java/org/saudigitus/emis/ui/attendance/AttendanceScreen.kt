@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.saudigitus.emis.ui.attendance.components.Toolbar
+import org.saudigitus.emis.ui.components.PreviewItemTracker
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -15,7 +16,7 @@ fun AttendanceScreen() {
 
     Scaffold(
         topBar = {
-            Toolbar(title = "")
+            Toolbar(title = "", subtitle = "16/02/2023")
         }
     ) { padding ->
         LazyColumn(
@@ -23,7 +24,11 @@ fun AttendanceScreen() {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-
+            for (i in 0..10) {
+                item {
+                    PreviewItemTracker(i)
+                }
+            }
         }
     }
 }
