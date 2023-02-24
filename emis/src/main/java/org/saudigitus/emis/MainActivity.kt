@@ -10,10 +10,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import dagger.hilt.android.AndroidEntryPoint
+import org.saudigitus.emis.data.model.AppConfig
+import org.saudigitus.emis.data.remote.DataStoreConfig
+import org.saudigitus.emis.service.APIClient
+import org.saudigitus.emis.service.Basic64AuthInterceptor
 import org.saudigitus.emis.ui.attendance.AttendanceScreen
 import org.saudigitus.emis.ui.theme.EmisCaptureTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.create
+import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    lateinit var dataStoreConfig: DataStoreConfig
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -23,6 +37,24 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    Basic64AuthInterceptor.setCredential("", "")
+                    dataStoreConfig = APIClient
+                        .getClient("https://dhis2dev.waliku.org/dev/api/")
+                        ?.create(DataStoreConfig::class.java)!!
+
+                    dataStoreConfig.getConfig().enqueue(object : Callback<AppConfig> {
+                        override fun onResponse(
+                            call: Call<AppConfig>,
+                            response: Response<AppConfig>
+                        ) {
+                            Timber.tag("CONF").e("${response.body()?.filters}")
+                        }
+
+                        override fun onFailure(call: Call<AppConfig>, t: Throwable) {
+                            Timber.tag("CONF").e(t)
+                        }
+                    })
+
                     AttendanceScreen()
                 }
             //}
