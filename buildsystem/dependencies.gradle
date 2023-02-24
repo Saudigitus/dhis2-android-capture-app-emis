@@ -102,6 +102,7 @@ ext {
             jodatime                  : "2.9.9",
             glide                     : "4.9.0",
             guava                     : "27.0.1-android",
+            jackson                   : "2.14.1",
 
             // test dependencies
             equalsverifier            : "2.2.1",
@@ -133,7 +134,6 @@ ext {
             preference_ktx              : '1.2.0',
 
             // DI
-//            hilt                        : '2.43.2',
             hilt                        : '2.44',
 
             coroutines_test            : "1.6.4",
@@ -150,7 +150,6 @@ ext {
             kotlin_version   : "1.8.0",
             kotlin_serialization   : "1.4.1",
             kotlin_compiler_extension_version   : "1.4.0",
-//            lifecycle        : "2.5.1",
 
             // network
             retrofit_version : "2.9.0",
@@ -167,6 +166,8 @@ ext {
             hilt_version     : "2.44",
 
             // coroutines
-            coroutine_version: "1.5.2"
+            coroutine_version: "1.5.2",
+
+            logging_interceptor : "4.10.0"
     ]
 }
