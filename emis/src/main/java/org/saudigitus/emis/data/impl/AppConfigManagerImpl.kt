@@ -8,10 +8,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import org.saudigitus.emis.data.local.AppConfigSerialization
 import org.saudigitus.emis.data.model.AppConfig
-import org.saudigitus.emis.data.source.local.AppConfigManager
+import org.saudigitus.emis.data.local.AppConfigManager
 import javax.inject.Inject
 
 val Context.dataStore by dataStore("emis-app-config.json", AppConfigSerialization)
@@ -39,4 +40,10 @@ class AppConfigManagerImpl
         }
     }
 
+    override suspend fun isConfigNull(program: String) =
+        withContext(ioDispatcher) {
+            val result = getAppConfigByProgram(program).firstOrNull()
+
+            return@withContext result != null
+        }
 }
