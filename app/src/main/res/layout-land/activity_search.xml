@@ -283,5 +283,19 @@
                     app:tint="?attr/colorPrimary" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/attendance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attendance"
+            app:icon="@drawable/ic_rule"
+            app:iconTint="@color/white"
+            android:textAllCaps="false"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp" />
     </RelativeLayout>
 </layout>

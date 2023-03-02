@@ -222,14 +222,13 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
 
         when (program.programType) {
             ProgramType.WITH_REGISTRATION.name -> {
-                Intent(activity, org.saudigitus.emis.MainActivity::class.java).apply {
+                Intent(activity, SearchTEActivity::class.java).apply {
                     putExtras(bundle)
                     getActivityContent.launch(this)
                 }
             }
             ProgramType.WITHOUT_REGISTRATION.name -> {
-//                Intent(activity, ProgramEventDetailActivity::class.java).apply {
-                Intent(activity, org.saudigitus.emis.MainActivity::class.java).apply {
+                Intent(activity, ProgramEventDetailActivity::class.java).apply {
                     putExtras(ProgramEventDetailActivity.getBundle(program.uid))
                     getActivityContent.launch(this)
                 }
