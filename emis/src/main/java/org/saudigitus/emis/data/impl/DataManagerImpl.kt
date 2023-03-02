@@ -7,6 +7,7 @@ import org.dhis2.Bindings.userFriendlyValue
 import org.dhis2.commons.data.SearchTeiModel
 import org.hisp.dhis.android.core.D2
 import org.hisp.dhis.android.core.arch.repositories.scope.RepositoryScope
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnitMode
 import org.hisp.dhis.android.core.program.Program
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttribute
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttributeValue
@@ -22,6 +23,7 @@ class DataManagerImpl
 ): DataManager{
 
     override suspend fun trackedEntityInstances(
+        ou: String,
         program: String
     ) =
         withContext(Dispatchers.IO) {
@@ -29,7 +31,7 @@ class DataManagerImpl
 
             return@withContext if (NetworkUtils.isOnline(context)) {
                 repository.onlineFirst().allowOnlineCache().eq(true)
-                    .byOrgUnits().eq("aDM8y4dwpki")
+                    .byOrgUnits().eq(ou)
                     .byProgram().eq(program)
                     .blockingGet()
                     .flatMap { tei ->
@@ -40,7 +42,7 @@ class DataManagerImpl
             } else {
                 repository
                     .offlineOnly().allowOnlineCache().eq(false)
-                    .byOrgUnits().eq("aDM8y4dwpki")
+                    .byOrgUnits().eq(ou)
                     .byProgram().eq(program)
                     .blockingGet()
                     .flatMap { tei ->
