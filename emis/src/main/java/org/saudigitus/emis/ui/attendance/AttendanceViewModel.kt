@@ -22,7 +22,7 @@ class AttendanceViewModel
     val searchTeiModel = _searchTeiModel.asStateFlow()
 
     init {
-        getTeis("AkDQ4JvN3dW")
+        getTeis(ou = "", program = "")
     }
 
     fun enableEMIS(program: String) {
@@ -31,9 +31,9 @@ class AttendanceViewModel
         }
     }
 
-    fun getTeis(program: String) {
+    fun getTeis(ou: String, program: String) {
         viewModelScope.launch {
-            _searchTeiModel.value = dataManager.trackedEntityInstances(program)
+            _searchTeiModel.value = dataManager.trackedEntityInstances(ou, program)
         }
     }
 }
