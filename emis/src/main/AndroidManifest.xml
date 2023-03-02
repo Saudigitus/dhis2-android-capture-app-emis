@@ -6,7 +6,7 @@
 
     <application android:allowBackup="false">
         <activity
-            android:name=".MainActivity"
+            android:name=".HomeActivity"
             android:exported="false"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
