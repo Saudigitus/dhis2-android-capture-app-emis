@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply from: "$project.rootDir/jacoco/jacoco.gradle"
 apply plugin: "kotlinx-serialization"
+apply plugin: "kotlin-parcelize"
 apply plugin: "dagger.hilt.android.plugin"
 
 def libraries = rootProject.ext.libraries
