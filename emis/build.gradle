@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 def libraries = rootProject.ext.libraries
@@ -51,6 +52,8 @@ dependencies {
 
     // lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$libraries.lifecycle"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$libraries.viewModelCompose"
 
     // compose
     implementation "androidx.activity:activity-compose:$libraries.compose_activity"

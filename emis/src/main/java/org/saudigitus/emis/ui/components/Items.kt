@@ -73,9 +73,11 @@ private fun CardItemContainer(
 @Composable
 fun AttendanceButtons(
     actions: List<AttendanceActions>,
-    onClick: (attendanceState: String) -> Unit
+    onClick: (attendanceState: String) -> Unit,
+    //modifier: Modifier = Modifier
 ) {
     Row(
+        //modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -102,6 +104,7 @@ fun AttendanceButtons(
 @Composable
 fun ItemTracker(
     painter: Painter? = null,
+    icoLetter: String? = null,
     themeColor: Color,
     onClick: () -> Unit,
     content: @Composable (RowScope.() -> Unit)
@@ -124,7 +127,7 @@ fun ItemTracker(
                     colorFilter = ColorFilter.tint(Color.White)
                 )
                 if (painter == null) {
-                    Text(text = "A", color = Color.White)
+                    Text(text = "$icoLetter", color = Color.White)
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
@@ -161,7 +164,7 @@ fun PreviewItemTracker(i: Int = 0) {
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
