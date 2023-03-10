@@ -3,4 +3,7 @@
     <string name="calendar">Calendar</string>
     <string name="back">Back</string>
     <string name="attendance">Attendance</string>
+    <string name="reason">Reason</string>
+    <string name="attendance_date">Attendance Date</string>
+    <string name="attendance_summary">Attendance Summary</string>
 </resources>
