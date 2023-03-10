@@ -70,6 +70,8 @@ dependencies {
     // Rule Engine
     implementation "org.hisp.dhis.rules:rule-engine:$libraries.ruleEngine"
 
+    //
+    implementation "com.google.accompanist:accompanist-themeadapter-material3:0.29.1-alpha"
 
     //proto datastore & serialization & collections
     implementation "androidx.datastore:datastore:$libraries.datastore"
