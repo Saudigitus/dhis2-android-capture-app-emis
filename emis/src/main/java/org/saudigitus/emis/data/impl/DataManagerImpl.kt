@@ -1,6 +1,9 @@
 package org.saudigitus.emis.data.impl
 
 import android.content.Context
+import java.sql.Date
+import java.util.Collections
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,29 +15,23 @@ import org.hisp.dhis.android.core.arch.repositories.scope.RepositoryScope
 import org.hisp.dhis.android.core.event.Event
 import org.hisp.dhis.android.core.event.EventCreateProjection
 import org.hisp.dhis.android.core.option.Option
-import org.hisp.dhis.android.core.organisationunit.OrganisationUnitMode
-import org.hisp.dhis.android.core.program.Program
 import org.hisp.dhis.android.core.program.ProgramStage
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttribute
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttributeValue
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstance
-import org.saudigitus.emis.data.Sdk
 import org.saudigitus.emis.data.local.DataManager
 import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.utils.Constants.DEFAULT
 import org.saudigitus.emis.utils.DateUtil
 import org.saudigitus.emis.utils.NetworkUtils
 import timber.log.Timber
-import java.sql.Date
-import java.util.Collections
-import javax.inject.Inject
 
 class DataManagerImpl
 @Inject constructor(
     private val context: Context,
     private val d2: D2,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-): DataManager{
+) : DataManager {
 
     private fun getAttributeOptionCombo() =
         d2.categoryModule().categoryOptionCombos()
@@ -113,7 +110,6 @@ class DataManagerImpl
                 Timber.tag("SAVE_EVENT").e(e)
             }
         }
-
 
     override suspend fun trackedEntityInstances(
         ou: String,
@@ -211,7 +207,6 @@ class DataManagerImpl
             return@withContext d2.programModule().programStages()
                 .byUid().eq(uid).one().blockingGet()
         }
-
 
     private fun transform(
         tei: TrackedEntityInstance,

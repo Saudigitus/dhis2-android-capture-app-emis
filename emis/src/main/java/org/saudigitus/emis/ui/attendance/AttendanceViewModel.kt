@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -44,7 +45,6 @@ import org.saudigitus.emis.utils.Constants.USER_PASS
 import org.saudigitus.emis.utils.Constants.WHITE
 import org.saudigitus.emis.utils.DateUtil
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
 class AttendanceViewModel
@@ -54,7 +54,7 @@ class AttendanceViewModel
     private val appConfig: AppConfigManager,
     private val preferenceProvider: PreferenceProvider,
     private val resourceManager: ResourceManager
-): ViewModel() {
+) : ViewModel() {
 
     private val _attendanceSetting = MutableStateFlow(AttendanceLineList())
     private val attendanceSetting = _attendanceSetting.asStateFlow()
@@ -63,7 +63,7 @@ class AttendanceViewModel
     val searchTeiModel = _searchTeiModel.asStateFlow()
 
     private val _reasonOfAbsence = MutableStateFlow<List<Option>?>(null)
-    val reasonOfAbsence =  _reasonOfAbsence.asStateFlow()
+    val reasonOfAbsence = _reasonOfAbsence.asStateFlow()
 
     private val _attendanceOptions = MutableStateFlow<MutableList<AttendanceActions>?>(null)
     val attendanceActions = _attendanceOptions.asStateFlow()
@@ -264,7 +264,7 @@ class AttendanceViewModel
 
         attendanceList.value?.forEach {
             if (it != null) {
-                setAttendanceUiState( 0, it.tei, it.value)
+                setAttendanceUiState(0, it.tei, it.value)
             }
         }
     }
@@ -275,7 +275,7 @@ class AttendanceViewModel
         value: String
     ) {
         val uiCacheItem = AttendanceUiState(
-            btnIndex =  index,
+            btnIndex = index,
             btnId = tei,
             iconTint = 0,
             buttonState = AttendanceButtonState(
@@ -358,5 +358,4 @@ class AttendanceViewModel
         attendanceCache.clear()
         attendanceUiState.clear()
     }
-
 }

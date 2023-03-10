@@ -1,12 +1,12 @@
 package org.saudigitus.emis.service
 
 import android.util.Base64
+import java.nio.charset.StandardCharsets
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import java.nio.charset.StandardCharsets
 
-object Basic64AuthInterceptor: Interceptor {
+object Basic64AuthInterceptor : Interceptor {
 
     private lateinit var credentials: String
 

@@ -1,6 +1,5 @@
 package org.saudigitus.emis.ui.attendance.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -13,28 +12,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -52,7 +45,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -60,14 +52,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.SecureFlagPolicy
 import org.saudigitus.emis.R
 import org.saudigitus.emis.ui.attendance.AttendanceViewModel
 import org.saudigitus.emis.ui.components.TextButton
 import org.saudigitus.emis.ui.theme.Green
 import org.saudigitus.emis.ui.theme.Orange
 import org.saudigitus.emis.ui.theme.Red
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -148,11 +138,13 @@ fun ReasonForAbsenceDialog(
                 offset = DpOffset(x = 0.dp, y = 2.dp)
             ) {
                 viewModel.reasonOfAbsence.collectAsState().value?.forEachIndexed { index, reason ->
-                    DropdownMenuItem(onClick = {
-                        selectedText = reason.displayName().toString()
-                        selectedIndex = index
-                        onItemClick.invoke(reason.code().toString())
-                    }) {
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedText = reason.displayName().toString()
+                            selectedIndex = index
+                            onItemClick.invoke(reason.code().toString())
+                        }
+                    ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -177,7 +169,6 @@ fun ReasonForAbsenceDialog(
     }
 }
 
-
 @Composable
 fun AttendanceSummaryDialog(
     title: String,
@@ -188,7 +179,6 @@ fun AttendanceSummaryDialog(
     onCancel: () -> Unit,
     onDone: () -> Unit
 ) {
-
     DialogTemplate(
         title = title,
         themeColor = themeColor
@@ -276,7 +266,6 @@ private fun SummaryComponent(
     }
 }
 
-
 @Composable
 private fun DialogTemplate(
     title: String,
@@ -314,5 +303,4 @@ private fun DialogTemplate(
             content()
         }
     }
-
 }

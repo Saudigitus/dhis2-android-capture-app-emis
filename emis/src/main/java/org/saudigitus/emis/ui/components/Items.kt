@@ -6,7 +6,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -23,9 +22,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
@@ -39,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,14 +46,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.layoutId
-import okhttp3.internal.filterList
-import org.saudigitus.emis.R
 import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.ui.attendance.AttendanceUiState
 import org.saudigitus.emis.ui.attendance.AttendanceViewModel
@@ -141,8 +132,8 @@ fun AttendanceButtons(
                         getContainerColor(btnState, tei, action.code.toString(), selectedIndex, actions)
                     ),
                     contentColor = Color(
-                         getContentColor(btnState, tei, action.code.toString(), selectedIndex, actions)
-                             ?: action.hexColor ?: White.value.toLong()
+                        getContentColor(btnState, tei, action.code.toString(), selectedIndex, actions)
+                            ?: action.hexColor ?: White.value.toLong()
                     )
                 )
             ) {
@@ -166,18 +157,16 @@ private fun getContainerColor(
     val actionIndex = actions?.indexOfFirst { it.code == attendance?.btnId }
 
     return if (attendance != null &&
-        attendance.buttonState?.buttonType?.name?.lowercase() == code
-        && (attendance.btnIndex == selectedIndex)
+        attendance.buttonState?.buttonType?.name?.lowercase() == code &&
+        (attendance.btnIndex == selectedIndex)
     ) {
         attendance.buttonState.containerColor ?: 0L
-
     } else if (attendance != null && selectedIndex == -1 && attendance.btnIndex == actionIndex) {
         Timber.tag("QAD").e("INNN")
         attendance.buttonState?.containerColor ?: 0L
     } else {
         White.value.toLong()
     }
-
 }
 
 private fun getContentColor(
@@ -191,14 +180,13 @@ private fun getContentColor(
     val actionIndex = actions?.indexOfFirst { it.code == attendance?.btnId }
 
     return if (attendance != null &&
-        attendance.buttonState?.buttonType?.name?.lowercase() == code
-        && (attendance.btnIndex == selectedIndex || attendance.btnIndex == actionIndex)
+        attendance.buttonState?.buttonType?.name?.lowercase() == code &&
+        (attendance.btnIndex == selectedIndex || attendance.btnIndex == actionIndex)
     ) {
         attendance.buttonState.contentColor
     } else {
         attendance?.buttonState?.contentColor
     }
-
 }
 
 @Composable
@@ -264,7 +252,6 @@ fun AttendanceItemState(
         }
     }
 }
-
 
 @Composable
 fun ItemTracker(

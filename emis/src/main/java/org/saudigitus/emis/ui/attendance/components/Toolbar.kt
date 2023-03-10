@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
@@ -34,12 +32,6 @@ import org.dhis2.commons.date.DateUtils
 import org.saudigitus.emis.R
 import org.saudigitus.emis.ui.components.TextButton
 import org.saudigitus.emis.utils.DateUtil
-import timber.log.Timber
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,23 +50,26 @@ fun Toolbar(
     var isCalendar by remember { mutableStateOf(false) }
 
     var selectedDate by remember {
-        mutableStateOf(DateUtil.formatDate(
-            datePickerState.selectedDateMillis ?: DateUtils.getInstance().today.time))
+        mutableStateOf(
+            DateUtil.formatDate(
+                datePickerState.selectedDateMillis ?: DateUtils.getInstance().today.time
+            )
+        )
     }
 
     if (isCalendar) {
         DatePickerDialog(
             onDismissRequest = {},
-            confirmButton =  {
-               TextButton(
-                   title = stringResource(R.string.done),
-                   containerColor = Color.White,
-                   contentColor = MaterialTheme.colors.primary
-               ) {
-                   selectedDate = DateUtil.formatDate(datePickerState.selectedDateMillis ?: 0)
-                   onDatePick.invoke(selectedDate)
-                   isCalendar = !isCalendar
-               }
+            confirmButton = {
+                TextButton(
+                    title = stringResource(R.string.done),
+                    containerColor = Color.White,
+                    contentColor = MaterialTheme.colors.primary
+                ) {
+                    selectedDate = DateUtil.formatDate(datePickerState.selectedDateMillis ?: 0)
+                    onDatePick.invoke(selectedDate)
+                    isCalendar = !isCalendar
+                }
             },
             dismissButton = {
                 TextButton(
@@ -153,4 +148,3 @@ fun Toolbar(
         )
     )
 }
-

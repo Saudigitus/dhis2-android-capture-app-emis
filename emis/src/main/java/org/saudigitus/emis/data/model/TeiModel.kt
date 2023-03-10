@@ -1,10 +1,10 @@
 package org.saudigitus.emis.data.model
 
 import android.os.Parcelable
+import java.util.LinkedHashMap
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttributeValue
-import java.util.LinkedHashMap
 
 @Parcelize
 data class TeiModel(

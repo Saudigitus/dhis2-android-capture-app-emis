@@ -18,12 +18,12 @@ object Constants {
     const val GRADE = "grade"
     const val POSITION = "position"
 
-    //attendance types
+    // attendance types
     const val PRESENT = "present"
     const val LATE = "late"
     const val ABSENT = "absent"
 
-    //attendance action sorter
+    // attendance action sorter
     const val ACTION_SORT_FIRST = 1
     const val ACTION_SORT_SECOND = 2
     const val ACTION_SORT_THIRD = 3
@@ -31,13 +31,13 @@ object Constants {
     //
     const val USER_PASS = "user_pass"
 
-    //attr combo
+    // attr combo
     const val DEFAULT = "default"
 
-    //filter
+    // filter
     const val FILTER_INTENT_KEY = "EMIS_FILTER"
 
-    //color constants
+    // color constants
     const val GREEN = 0xFF00FF00
     const val ORANGE = 0xFFF79706
     const val RED = 0xFFFF0000

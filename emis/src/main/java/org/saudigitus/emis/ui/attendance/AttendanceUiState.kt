@@ -4,7 +4,7 @@ data class AttendanceUiState(
     val btnIndex: Int = -1,
     val btnId: String? = null,
     val iconTint: Long? = null,
-    val buttonState:  AttendanceButtonState? = null
+    val buttonState: AttendanceButtonState? = null
 )
 
 data class AttendanceButtonState(
