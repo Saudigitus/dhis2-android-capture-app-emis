@@ -2,10 +2,15 @@ package org.saudigitus.emis.ui.components.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import org.hisp.dhis.android.core.dataelement.DataElement
 
 data class AttendanceActions(
-    val name: String,
+    val code: String? = null,
+    val name: String? = null,
+    val dataElement: String? = null,
     val icon: Int = 0,
-    val iconVector: ImageVector? = null,
-    val tint: Color
-)
+    val hexColor: Long? = 0xFF00FF00,
+    val actionOrder: Int? = null
+) {
+
+}
