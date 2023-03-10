@@ -7,6 +7,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import org.dhis2.commons.prefs.PreferenceProvider
+import org.dhis2.commons.prefs.PreferenceProviderImpl
 import org.hisp.dhis.android.core.D2
 import org.saudigitus.emis.data.Sdk
 import org.saudigitus.emis.data.impl.AppConfigManagerImpl
@@ -32,4 +34,10 @@ object AppModule {
         @ApplicationContext context: Context,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): AppConfigManager = AppConfigManagerImpl(context, ioDispatcher)
+
+    @Provides
+    @Singleton
+    fun providesPreferences(
+        @ApplicationContext context: Context
+    ): PreferenceProvider = PreferenceProviderImpl(context)
 }
