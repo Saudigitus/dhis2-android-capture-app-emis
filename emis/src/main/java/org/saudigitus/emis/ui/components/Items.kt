@@ -128,11 +128,10 @@ fun AttendanceButtons(
                     .size(32.dp),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = Color(
-
-                        getContainerColor(btnState, tei, action.code.toString(), selectedIndex, actions)
+                        getContainerColor(btnState, tei, action.code.toString(), selectedIndex)
                     ),
                     contentColor = Color(
-                        getContentColor(btnState, tei, action.code.toString(), selectedIndex, actions)
+                        getContentColor(btnState, tei, action.code.toString(), selectedIndex)
                             ?: action.hexColor ?: White.value.toLong()
                     )
                 )
