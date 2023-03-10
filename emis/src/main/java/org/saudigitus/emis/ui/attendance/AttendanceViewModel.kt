@@ -334,14 +334,14 @@ class AttendanceViewModel
             attendanceCache.add(attendance)
         }
 
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             dataManager.save(
                 ou = ou,
                 program = attendanceSetting.value.program.toString(),
                 programStage = attendanceSetting.value.programStage.toString(),
                 attendance = attendance
             )
-        }*/
+        }
     }
 
     fun getSummary(
