@@ -46,8 +46,10 @@ import org.dhis2.utils.granularsync.SyncStatusDialog;
 import org.hisp.dhis.android.core.arch.call.D2Progress;
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.saudigitus.emis.HomeActivity;
+import org.saudigitus.emis.data.model.FilterSettings;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -180,8 +182,12 @@ public class SearchTEActivity extends ActivityGlobalAbstract implements SearchTE
         );
 
         binding.attendance.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("EMIS_FILTER", new FilterSettings(
+                    FilterManager.getInstance().getOrgUnitUidsFilters().get(0),
+                    getIntent().getStringExtra("PROGRAM_UID")
+            ));
+            startActivity(intent);
         });
 
         configureBottomNavigation();

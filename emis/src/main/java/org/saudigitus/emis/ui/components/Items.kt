@@ -6,7 +6,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -19,16 +18,27 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Help
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,12 +46,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.saudigitus.emis.R
+import androidx.constraintlayout.compose.layoutId
+import org.saudigitus.emis.data.model.Attendance
+import org.saudigitus.emis.ui.attendance.AttendanceUiState
+import org.saudigitus.emis.ui.attendance.AttendanceViewModel
 import org.saudigitus.emis.ui.components.model.AttendanceActions
+import org.saudigitus.emis.ui.theme.White
+import org.saudigitus.emis.utils.Constants.ABSENT
+import org.saudigitus.emis.utils.Constants.LATE
+import org.saudigitus.emis.utils.Constants.PRESENT
+import timber.log.Timber
 
 @Composable
 private fun ItemContainer(
@@ -66,36 +82,171 @@ private fun CardItemContainer(
         modifier = Modifier
             .clickable { onClick.invoke() },
         shape = RoundedCornerShape(0.dp),
-        content = content
+        content = content,
+        elevation = CardDefaults.cardElevation(0.dp),
+        border = BorderStroke(0.dp, Color.White)
     )
 }
 
 @Composable
 fun AttendanceButtons(
+    viewModel: AttendanceViewModel,
+    tei: String,
     actions: List<AttendanceActions>,
-    onClick: (attendanceState: String) -> Unit,
-    //modifier: Modifier = Modifier
+    onClick: (
+        index: Int,
+        tei: String?,
+        attendanceState: String
+    ) -> Unit
 ) {
+    val btnState by viewModel.attendanceBtnState.collectAsState()
+    var btnCode by remember { mutableStateOf("") }
+    var selectedIndex by remember { mutableStateOf(-1) }
+
     Row(
-        //modifier = modifier,
+        modifier = Modifier.layoutId(layoutId = tei),
         horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        actions.forEach {
+        actions.forEachIndexed { index, action ->
             IconButton(
-                onClick = { onClick.invoke(it.name) },
+                onClick = {
+                    btnCode = action.code.toString()
+                    selectedIndex = index
+
+                    onClick.invoke(
+                        index,
+                        tei,
+                        action.code.toString()
+                    )
+                },
                 modifier = Modifier
                     .border(
                         border = BorderStroke(1.dp, Color.LightGray),
-                        shape = MaterialTheme.shapes.small.copy(CornerSize(100.dp))
+                        shape = MaterialTheme.shapes.small.copy(CornerSize(32.dp))
                     )
-                    .size(32.dp)
+                    .size(32.dp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color(
+                        getContainerColor(btnState, tei, action.code.toString(), selectedIndex)
+                    ),
+                    contentColor = Color(
+                        getContentColor(btnState, tei, action.code.toString(), selectedIndex)
+                            ?: action.hexColor ?: White.value.toLong()
+                    )
+                )
             ) {
                 Icon(
-                    imageVector = it.iconVector ?: ImageVector.vectorResource(it.icon),
-                    contentDescription = it.name,
-                    tint = it.tint
+                    imageVector = ImageVector.vectorResource(action.icon),
+                    contentDescription = action.name
                 )
+            }
+        }
+    }
+}
+
+private fun getContainerColor(
+    btnState: MutableList<AttendanceUiState>,
+    tei: String,
+    code: String,
+    selectedIndex: Int,
+    actions: List<AttendanceActions>? = null
+): Long {
+    val attendance = btnState.find { it.btnId == tei }
+    val actionIndex = actions?.indexOfFirst { it.code == attendance?.btnId }
+
+    return if (attendance != null &&
+        attendance.buttonState?.buttonType?.name?.lowercase() == code &&
+        (attendance.btnIndex == selectedIndex)
+    ) {
+        attendance.buttonState.containerColor ?: 0L
+    } else if (attendance != null && selectedIndex == -1 && attendance.btnIndex == actionIndex) {
+        Timber.tag("QAD").e("INNN")
+        attendance.buttonState?.containerColor ?: 0L
+    } else {
+        White.value.toLong()
+    }
+}
+
+private fun getContentColor(
+    btnState: MutableList<AttendanceUiState>,
+    tei: String,
+    code: String,
+    selectedIndex: Int,
+    actions: List<AttendanceActions>? = null
+): Long? {
+    val attendance = btnState.find { it.btnId == tei }
+    val actionIndex = actions?.indexOfFirst { it.code == attendance?.btnId }
+
+    return if (attendance != null &&
+        attendance.buttonState?.buttonType?.name?.lowercase() == code &&
+        (attendance.btnIndex == selectedIndex || attendance.btnIndex == actionIndex)
+    ) {
+        attendance.buttonState.contentColor
+    } else {
+        attendance?.buttonState?.contentColor
+    }
+}
+
+@Composable
+fun AttendanceItemState(
+    tei: String,
+    attendanceState: List<Attendance?>?
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (attendanceState == null || attendanceState.isEmpty()) {
+            Icon(
+                imageVector = Icons.Filled.Help,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp),
+                tint = Color.LightGray
+            )
+        }
+
+        attendanceState?.let { attendances ->
+            for (attendance in attendances) {
+                if (attendance?.tei == tei) {
+                    when (attendance.value) {
+                        PRESENT -> {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = attendance.value,
+                                modifier = Modifier.size(32.dp),
+                                tint = Color.Green
+                            )
+                            break
+                        }
+                        LATE -> {
+                            Icon(
+                                imageVector = Icons.Outlined.Schedule,
+                                contentDescription = attendance.value,
+                                modifier = Modifier.size(32.dp),
+                                tint = Color(0xFFF79706)
+                            )
+                            break
+                        }
+                        ABSENT -> {
+                            Icon(
+                                imageVector = Icons.Filled.Cancel,
+                                contentDescription = attendance.value,
+                                modifier = Modifier.size(32.dp),
+                                tint = Color.Red
+                            )
+                            break
+                        }
+                    }
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.Help,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp),
+                        tint = Color.LightGray
+                    )
+                    break
+                }
             }
         }
     }
@@ -114,7 +265,7 @@ fun ItemTracker(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
-                    .background(color = colorResource(R.color.purple_500))
+                    .background(color = themeColor)
                     .size(40.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -140,60 +291,5 @@ fun ItemTracker(
                 .align(Alignment.End)
                 .wrapContentWidth(Alignment.End, false)
         )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewAttendanceActions() {
-    val actions = mutableListOf(
-        AttendanceActions("Present", iconVector = Icons.Outlined.Check, tint = Color.Green),
-        AttendanceActions("Late", iconVector = Icons.Outlined.Schedule, tint = Color(0xFFF79706)),
-        AttendanceActions("Absent", iconVector = Icons.Outlined.Close, tint = Color.Red),
-    )
-
-    AttendanceButtons(actions = actions) {}
-}
-
-@Preview
-@Composable
-fun PreviewItemTracker(i: Int = 0) {
-    ItemTracker(
-        themeColor = Color(0xFF0984D9),
-        onClick = {}
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start)
-                ) {
-                    Text(text = "Full name:")
-                    Text(text = "Alpha$i Beta")
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start)
-                ) {
-                    Text(text = "Gender:")
-                    Text(text = "Female")
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start)
-                ) {
-                    Text(text = "Age:")
-                    Text(text = "1$i")
-                }
-            }
-            PreviewAttendanceActions()
-        }
     }
 }

@@ -39,6 +39,7 @@ import org.hisp.dhis.android.core.maintenance.D2Error
 import org.hisp.dhis.android.core.maintenance.D2ErrorCode
 import org.hisp.dhis.android.core.systeminfo.SystemInfo
 import org.hisp.dhis.android.core.user.openid.OpenIDConnectConfig
+import org.saudigitus.emis.utils.Constants.USER_PASS
 import retrofit2.Response
 import timber.log.Timber
 
@@ -189,6 +190,7 @@ class LoginPresenter(
             )
                 .flatMap { userManager ->
                     preferenceProvider.setValue(SERVER, "$serverUrl/api")
+                    preferenceProvider.setValue(USER_PASS, pass)
                     this.userManager = userManager
                     userManager.logIn(userName.trim { it <= ' ' }, pass, serverUrl)
                         .map<Response<Any>> { user ->

@@ -1,8 +1,6 @@
 package org.saudigitus.emis.data.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 
 @Serializable

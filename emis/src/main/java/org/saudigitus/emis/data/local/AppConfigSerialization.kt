@@ -1,15 +1,15 @@
 package org.saudigitus.emis.data.local
 
 import androidx.datastore.core.Serializer
+import java.io.InputStream
+import java.io.OutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.saudigitus.emis.data.model.AppConfig
 import timber.log.Timber
-import java.io.InputStream
-import java.io.OutputStream
 
-object AppConfigSerialization: Serializer<AppConfig> {
+object AppConfigSerialization : Serializer<AppConfig> {
     override val defaultValue: AppConfig
         get() = AppConfig()
 

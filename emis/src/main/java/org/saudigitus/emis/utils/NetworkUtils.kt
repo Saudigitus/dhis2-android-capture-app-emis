@@ -2,8 +2,6 @@ package org.saudigitus.emis.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.os.Build
-import androidx.annotation.RequiresApi
 import timber.log.Timber
 
 object NetworkUtils {

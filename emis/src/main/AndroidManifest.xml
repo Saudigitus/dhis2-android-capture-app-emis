@@ -9,8 +9,7 @@
             android:name=".HomeActivity"
             android:exported="false"
             android:screenOrientation="fullSensor"
-            android:stateNotNeeded="true"
-            android:theme="@style/Theme.EmisCapture" />
+            android:stateNotNeeded="true"/>
     </application>
 
 </manifest>
