@@ -208,49 +208,43 @@ fun AttendanceItemState(
                 modifier = Modifier.size(32.dp),
                 tint = Color.LightGray
             )
-        }
+        } else {
+            val attendance = attendanceState.find { it?.tei == tei }
 
-        attendanceState?.let { attendances ->
-            for (attendance in attendances) {
-                if (attendance?.tei == tei) {
-                    when (attendance.value) {
-                        PRESENT -> {
-                            Icon(
-                                imageVector = Icons.Filled.CheckCircle,
-                                contentDescription = attendance.value,
-                                modifier = Modifier.size(32.dp),
-                                tint = Color.Green
-                            )
-                            break
-                        }
-                        LATE -> {
-                            Icon(
-                                imageVector = Icons.Outlined.Schedule,
-                                contentDescription = attendance.value,
-                                modifier = Modifier.size(32.dp),
-                                tint = Color(0xFFF79706)
-                            )
-                            break
-                        }
-                        ABSENT -> {
-                            Icon(
-                                imageVector = Icons.Filled.Cancel,
-                                contentDescription = attendance.value,
-                                modifier = Modifier.size(32.dp),
-                                tint = Color.Red
-                            )
-                            break
-                        }
+            if (attendance != null) {
+                when (attendance.value) {
+                    PRESENT -> {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            contentDescription = attendance.value,
+                            modifier = Modifier.size(32.dp),
+                            tint = Color.Green
+                        )
                     }
-                } else {
-                    Icon(
-                        imageVector = Icons.Filled.Help,
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.LightGray
-                    )
-                    break
+                    LATE -> {
+                        Icon(
+                            imageVector = Icons.Outlined.Schedule,
+                            contentDescription = attendance.value,
+                            modifier = Modifier.size(32.dp),
+                            tint = Color(0xFFF79706)
+                        )
+                    }
+                    ABSENT -> {
+                        Icon(
+                            imageVector = Icons.Filled.Cancel,
+                            contentDescription = attendance.value,
+                            modifier = Modifier.size(32.dp),
+                            tint = Color.Red
+                        )
+                    }
                 }
+            } else {
+                Icon(
+                    imageVector = Icons.Filled.Help,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp),
+                    tint = Color.LightGray
+                )
             }
         }
     }
