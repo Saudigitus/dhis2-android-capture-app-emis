@@ -57,6 +57,7 @@ import org.saudigitus.emis.ui.theme.White
 import org.saudigitus.emis.utils.Constants.ABSENT
 import org.saudigitus.emis.utils.Constants.LATE
 import org.saudigitus.emis.utils.Constants.PRESENT
+import org.saudigitus.emis.utils.Constants.WHITE
 import timber.log.Timber
 
 @Composable
@@ -131,8 +132,12 @@ fun AttendanceButtons(
                         getContainerColor(btnState, tei, action.code.toString(), selectedIndex)
                     ),
                     contentColor = Color(
-                        getContentColor(btnState, tei, action.code.toString(), selectedIndex)
-                            ?: action.hexColor ?: White.value.toLong()
+                        if (selectedIndex == index) {
+                            getContentColor(btnState, tei, action.code.toString(), selectedIndex)
+                                ?: action.hexColor ?: WHITE
+                        } else {
+                            action.hexColor ?: WHITE
+                        }
                     )
                 )
             ) {
@@ -160,11 +165,10 @@ private fun getContainerColor(
         (attendance.btnIndex == selectedIndex)
     ) {
         attendance.buttonState.containerColor ?: 0L
-    } else if (attendance != null && selectedIndex == -1 && attendance.btnIndex == actionIndex) {
-        Timber.tag("QAD").e("INNN")
+    } else if (attendance != null) {
         attendance.buttonState?.containerColor ?: 0L
     } else {
-        White.value.toLong()
+        WHITE
     }
 }
 

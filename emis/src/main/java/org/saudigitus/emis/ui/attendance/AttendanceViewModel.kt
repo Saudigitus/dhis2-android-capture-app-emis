@@ -253,6 +253,7 @@ class AttendanceViewModel
                         date = date.toString()
                     )
                 }
+                Timber.tag("VBA1").e("${attendanceList.value}")
             }
         }
 
@@ -262,18 +263,43 @@ class AttendanceViewModel
             attendanceCache.addAll(it.requireNoNulls())
         }
 
-        attendanceList.value?.forEach {
-            if (it != null) {
-                setAttendanceUiState(0, it.tei, it.value)
-            }
-        }
+        Timber.tag("VBA").e("${attendanceList.value}")
+
+        setAction()
     }
 
-    private fun setAttendanceUiState(
+    private fun setAction() {
+        _attendanceUiState.value = attendanceList.value?.map {
+            //if (it != null) {
+                AttendanceUiState(
+                    btnIndex = 0,
+                    btnId = it?.tei,
+                    iconTint = 0,
+                    buttonState = AttendanceButtonState(
+                        buttonType = when (it?.value) {
+                            PRESENT -> { ButtonType.PRESENT }
+                            LATE -> { ButtonType.LATE }
+                            ABSENT -> { ButtonType.ABSENT }
+                            else -> null
+                        },
+                        containerColor = when (it?.value) {
+                            PRESENT -> { GREEN }
+                            LATE -> { ORANGE }
+                            ABSENT -> { RED }
+                            else -> null
+                        },
+                        contentColor = WHITE
+                    )
+                )
+            //}
+        }?.toMutableList() ?: mutableListOf(AttendanceUiState())
+    }
+
+    private fun getAttendanceUiState(
         index: Int,
         tei: String,
         value: String
-    ) {
+    ): MutableList<AttendanceUiState> {
         val uiCacheItem = AttendanceUiState(
             btnIndex = index,
             btnId = tei,
@@ -304,7 +330,7 @@ class AttendanceViewModel
             attendanceUiState.add(uiCacheItem)
         }
 
-        _attendanceUiState.value = attendanceUiState
+        return attendanceUiState
     }
 
     fun setAttendance(
@@ -314,7 +340,7 @@ class AttendanceViewModel
         value: String,
         reasonOfAbsence: String? = null
     ) {
-        setAttendanceUiState(index, tei, value)
+        _attendanceUiState.value = getAttendanceUiState(index, tei, value)
 
         val attendance = Attendance(
             tei = tei,
@@ -334,14 +360,14 @@ class AttendanceViewModel
             attendanceCache.add(attendance)
         }
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataManager.save(
                 ou = ou,
                 program = attendanceSetting.value.program.toString(),
                 programStage = attendanceSetting.value.programStage.toString(),
                 attendance = attendance
             )
-        }
+        }*/
     }
 
     fun getSummary(
