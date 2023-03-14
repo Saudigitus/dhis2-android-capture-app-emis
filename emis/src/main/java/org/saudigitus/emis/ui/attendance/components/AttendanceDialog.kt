@@ -282,7 +282,7 @@ private fun DialogTemplate(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White, shape = RoundedCornerShape(32.dp)),
+                .background(color = Color.White),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
