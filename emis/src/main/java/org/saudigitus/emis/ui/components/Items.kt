@@ -21,9 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Help
-import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,16 +50,14 @@ import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.ui.attendance.AttendanceUiState
 import org.saudigitus.emis.ui.attendance.AttendanceViewModel
 import org.saudigitus.emis.ui.components.model.AttendanceActions
-import org.saudigitus.emis.ui.theme.White
 import org.saudigitus.emis.utils.Constants.ABSENT
 import org.saudigitus.emis.utils.Constants.LATE
 import org.saudigitus.emis.utils.Constants.PRESENT
 import org.saudigitus.emis.utils.Constants.WHITE
-import timber.log.Timber
 
 @Composable
 private fun ItemContainer(
-    content: @Composable() (RowScope.() -> Unit)
+    content: @Composable (RowScope.() -> Unit)
 ) {
     Row(
         modifier = Modifier
@@ -77,7 +72,7 @@ private fun ItemContainer(
 @Composable
 private fun CardItemContainer(
     onClick: () -> Unit,
-    content: @Composable() (ColumnScope.() -> Unit)
+    content: @Composable (ColumnScope.() -> Unit)
 ) {
     Card(
         modifier = Modifier
@@ -129,11 +124,11 @@ fun AttendanceButtons(
                     .size(32.dp),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = Color(
-                        getContainerColor(btnState, tei, action.code.toString(), selectedIndex)
+                        getContainerColor(btnState, tei, action.code.toString(), selectedIndex, index)
                     ),
                     contentColor = Color(
-                        if (selectedIndex == index) {
-                            getContentColor(btnState, tei, action.code.toString(), selectedIndex)
+                        if (selectedIndex == index || btnState.isNotEmpty()) {
+                            getContentColor(btnState, tei, action.code.toString(), selectedIndex, index)
                                 ?: action.hexColor ?: WHITE
                         } else {
                             action.hexColor ?: WHITE
@@ -155,18 +150,15 @@ private fun getContainerColor(
     tei: String,
     code: String,
     selectedIndex: Int,
-    actions: List<AttendanceActions>? = null
+    itemIndex: Int
 ): Long {
     val attendance = btnState.find { it.btnId == tei }
-    val actionIndex = actions?.indexOfFirst { it.code == attendance?.btnId }
 
     return if (attendance != null &&
         attendance.buttonState?.buttonType?.name?.lowercase() == code &&
-        (attendance.btnIndex == selectedIndex)
+        (attendance.btnIndex == selectedIndex || attendance.btnIndex == itemIndex)
     ) {
         attendance.buttonState.containerColor ?: 0L
-    } else if (attendance != null) {
-        attendance.buttonState?.containerColor ?: 0L
     } else {
         WHITE
     }
@@ -177,18 +169,17 @@ private fun getContentColor(
     tei: String,
     code: String,
     selectedIndex: Int,
-    actions: List<AttendanceActions>? = null
+    itemIndex: Int
 ): Long? {
     val attendance = btnState.find { it.btnId == tei }
-    val actionIndex = actions?.indexOfFirst { it.code == attendance?.btnId }
 
     return if (attendance != null &&
         attendance.buttonState?.buttonType?.name?.lowercase() == code &&
-        (attendance.btnIndex == selectedIndex || attendance.btnIndex == actionIndex)
+        (attendance.btnIndex == selectedIndex || attendance.btnIndex == itemIndex)
     ) {
-        attendance.buttonState.contentColor
+        attendance.buttonState.contentColor ?: WHITE
     } else {
-        attendance?.buttonState?.contentColor
+        null
     }
 }
 

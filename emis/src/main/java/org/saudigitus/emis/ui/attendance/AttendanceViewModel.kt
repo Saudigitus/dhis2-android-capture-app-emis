@@ -44,7 +44,6 @@ import org.saudigitus.emis.utils.Constants.RED
 import org.saudigitus.emis.utils.Constants.USER_PASS
 import org.saudigitus.emis.utils.Constants.WHITE
 import org.saudigitus.emis.utils.DateUtil
-import timber.log.Timber
 
 @HiltViewModel
 class AttendanceViewModel
@@ -73,7 +72,7 @@ class AttendanceViewModel
 
     private val _attendanceUiState = MutableStateFlow(mutableListOf(AttendanceUiState()))
     val attendanceBtnState = _attendanceUiState.asStateFlow()
-    private val attendanceUiState = mutableListOf(AttendanceUiState())
+    private var attendanceUiState = mutableListOf(AttendanceUiState())
 
     private val _attendanceStep = MutableStateFlow(ButtonStep.EDITING)
     val attendanceStep = _attendanceStep.asStateFlow()
@@ -253,46 +252,25 @@ class AttendanceViewModel
                         date = date.toString()
                     )
                 }
-                Timber.tag("VBA1").e("${attendanceList.value}")
+                clearCache()
+                attendanceList.value?.let { data ->
+                    attendanceCache.addAll(data.requireNoNulls())
+                }
+                setInitialAttendanceStatus()
             }
         }
-
-        clearCache()
-        attendanceList.value?.let {
-            Timber.tag("IWOIOI").e("${it.requireNoNulls().size}")
-            attendanceCache.addAll(it.requireNoNulls())
-        }
-
-        Timber.tag("VBA").e("${attendanceList.value}")
-
-        setAction()
     }
 
-    private fun setAction() {
-        _attendanceUiState.value = attendanceList.value?.map {
-            //if (it != null) {
-                AttendanceUiState(
-                    btnIndex = 0,
-                    btnId = it?.tei,
-                    iconTint = 0,
-                    buttonState = AttendanceButtonState(
-                        buttonType = when (it?.value) {
-                            PRESENT -> { ButtonType.PRESENT }
-                            LATE -> { ButtonType.LATE }
-                            ABSENT -> { ButtonType.ABSENT }
-                            else -> null
-                        },
-                        containerColor = when (it?.value) {
-                            PRESENT -> { GREEN }
-                            LATE -> { ORANGE }
-                            ABSENT -> { RED }
-                            else -> null
-                        },
-                        contentColor = WHITE
-                    )
-                )
-            //}
+    private fun setInitialAttendanceStatus() {
+        attendanceUiState = attendanceList.value?.map { attendance ->
+            attendanceUiMapper(
+                index = attendanceActions.value?.indexOfFirst { it.code == attendance?.value} ?: 0,
+                tei = attendance?.tei.toString(),
+                attendanceValue = attendance?.value.toString()
+            )
         }?.toMutableList() ?: mutableListOf(AttendanceUiState())
+
+        _attendanceUiState.value = attendanceUiState
     }
 
     private fun getAttendanceUiState(
@@ -300,25 +278,10 @@ class AttendanceViewModel
         tei: String,
         value: String
     ): MutableList<AttendanceUiState> {
-        val uiCacheItem = AttendanceUiState(
-            btnIndex = index,
-            btnId = tei,
-            iconTint = 0,
-            buttonState = AttendanceButtonState(
-                buttonType = when (value) {
-                    PRESENT -> { ButtonType.PRESENT }
-                    LATE -> { ButtonType.LATE }
-                    ABSENT -> { ButtonType.ABSENT }
-                    else -> null
-                },
-                containerColor = when (value) {
-                    PRESENT -> { GREEN }
-                    LATE -> { ORANGE }
-                    ABSENT -> { RED }
-                    else -> null
-                },
-                contentColor = WHITE
-            )
+        val uiCacheItem = attendanceUiMapper(
+            index = index,
+            tei = tei,
+            attendanceValue = value
         )
 
         val uiCache = attendanceUiState.find { it.btnId == tei }
@@ -360,14 +323,14 @@ class AttendanceViewModel
             attendanceCache.add(attendance)
         }
 
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             dataManager.save(
                 ou = ou,
                 program = attendanceSetting.value.program.toString(),
                 programStage = attendanceSetting.value.programStage.toString(),
                 attendance = attendance
             )
-        }*/
+        }
     }
 
     fun getSummary(
@@ -379,6 +342,31 @@ class AttendanceViewModel
 
         summaryData(presence, late, absent)
     }
+
+    private fun attendanceUiMapper(
+        index: Int,
+        tei: String,
+        attendanceValue: String
+    ) = AttendanceUiState(
+        btnIndex = index,
+        btnId = tei,
+        iconTint = 0,
+        buttonState = AttendanceButtonState(
+            buttonType = when (attendanceValue) {
+                PRESENT -> { ButtonType.PRESENT }
+                LATE -> { ButtonType.LATE }
+                ABSENT -> { ButtonType.ABSENT }
+                else -> null
+            },
+            containerColor = when (attendanceValue) {
+                PRESENT -> { GREEN }
+                LATE -> { ORANGE }
+                ABSENT -> { RED }
+                else -> null
+            },
+            contentColor = WHITE
+        )
+    )
 
     fun clearCache() {
         attendanceCache.clear()
