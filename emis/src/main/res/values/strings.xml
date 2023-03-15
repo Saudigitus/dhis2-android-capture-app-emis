@@ -7,4 +7,6 @@
     <string name="attendance_date">Attendance Date</string>
     <string name="attendance_summary">Attendance Summary</string>
     <string name="reason_absence">Reason Of Absence</string>
+    <string name="select_school">Select grade to proceed</string>
+    <string name="procceed_to_take_attendance_negative_msg">To be able to proceed and take attendance you must select a grade</string>
 </resources>
