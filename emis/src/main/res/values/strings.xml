@@ -6,4 +6,5 @@
     <string name="reason">Reason</string>
     <string name="attendance_date">Attendance Date</string>
     <string name="attendance_summary">Attendance Summary</string>
+    <string name="reason_absence">Reason Of Absence</string>
 </resources>

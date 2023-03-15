@@ -56,20 +56,23 @@ fun AttendanceScreen(
     var selectedAttendance by remember { mutableStateOf("") }
     var selectedIndex by remember { mutableStateOf(-1) }
     var selectedOu by remember { mutableStateOf("") }
+    var selectedReason by remember { mutableStateOf("") }
     var selectedTei by remember { mutableStateOf("") }
 
     if (isAbsent) {
         ReasonForAbsenceDialog(
             viewModel = viewModel,
-            title = "Reason Of Absence",
-            themeColor = Color(colorResource(id = R.color.colorPrimary).toArgb())
+            title = stringResource(R.string.reason_absence),
+            themeColor = Color(colorResource(id = R.color.colorPrimary).toArgb()),
+            onItemClick = { selectedReason = it },
+            onCancel = { isAbsent = !isAbsent }
         ) {
             viewModel.setAttendance(
                 index = selectedIndex,
                 ou = selectedOu,
                 tei = selectedTei,
                 value = selectedAttendance,
-                reasonOfAbsence = it,
+                reasonOfAbsence = selectedReason,
             )
 
             isAbsent = !isAbsent
