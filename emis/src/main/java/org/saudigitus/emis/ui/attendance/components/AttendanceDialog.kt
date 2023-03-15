@@ -54,6 +54,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.saudigitus.emis.R
 import org.saudigitus.emis.ui.attendance.AttendanceViewModel
+import org.saudigitus.emis.ui.components.ActionButtons
 import org.saudigitus.emis.ui.components.TextButton
 import org.saudigitus.emis.ui.theme.Green
 import org.saudigitus.emis.ui.theme.Orange
@@ -65,7 +66,9 @@ fun ReasonForAbsenceDialog(
     viewModel: AttendanceViewModel,
     title: String,
     themeColor: Color,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onCancel: () -> Unit,
+    onDone: () -> Unit
 ) {
     var selectedText by remember { mutableStateOf("") }
     var selectedIndex by remember { mutableStateOf(0) }
@@ -166,6 +169,12 @@ fun ReasonForAbsenceDialog(
                 }
             }
         }
+        ActionButtons(
+            modifier = Modifier.align(Alignment.End),
+            contentColor = themeColor,
+            onCancel = onCancel,
+            onDone = onDone
+        )
     }
 }
 
@@ -209,27 +218,15 @@ fun AttendanceSummaryDialog(
             )
         }
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextButton(
-                title = stringResource(R.string.cancel),
-                containerColor = Color.White,
-                contentColor = themeColor
-            ) { onCancel.invoke() }
-
-            TextButton(
-                title = stringResource(R.string.done),
-                containerColor = Color.White,
-                contentColor = themeColor
-            ) { onDone.invoke() }
-        }
+        ActionButtons(
+            modifier = Modifier.align(Alignment.End),
+            contentColor = themeColor,
+            onCancel = onCancel,
+            onDone = onDone
+        )
     }
 }
+
 
 @Composable
 private fun SummaryComponent(
