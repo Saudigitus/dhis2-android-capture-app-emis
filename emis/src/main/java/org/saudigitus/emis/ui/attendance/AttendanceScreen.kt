@@ -1,6 +1,10 @@
 package org.saudigitus.emis.ui.attendance
 
 import android.app.Activity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -58,6 +63,11 @@ fun AttendanceScreen(
     var selectedOu by remember { mutableStateOf("") }
     var selectedReason by remember { mutableStateOf("") }
     var selectedTei by remember { mutableStateOf("") }
+
+    val lazyListState = rememberLazyListState()
+    val fabVisibility by remember {
+        mutableStateOf(lazyListState.firstVisibleItemIndex == 0)
+    }
 
     if (isAbsent) {
         ReasonForAbsenceDialog(
@@ -113,25 +123,31 @@ fun AttendanceScreen(
             ) { activity.finish() }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if (attendanceStep == ButtonStep.HOLD_SAVING) {
-                        viewModel.setAttendanceStep(ButtonStep.SAVING)
-                    } else {
-                        viewModel.setAttendanceStep(ButtonStep.HOLD_SAVING)
-                    }
-                },
-                containerColor = MaterialTheme.colors.primary,
-                contentColor = Color.White
+            AnimatedVisibility(
+                visible = fabVisibility,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                Icon(
-                    imageVector = if (attendanceStep == ButtonStep.EDITING) {
-                        Icons.Outlined.Edit
-                    } else {
-                        Icons.Outlined.Save
+                FloatingActionButton(
+                    onClick = {
+                        if (attendanceStep == ButtonStep.HOLD_SAVING) {
+                            viewModel.setAttendanceStep(ButtonStep.SAVING)
+                        } else {
+                            viewModel.setAttendanceStep(ButtonStep.HOLD_SAVING)
+                        }
                     },
-                    contentDescription = null
-                )
+                    containerColor = MaterialTheme.colors.primary,
+                    contentColor = Color.White
+                ) {
+                    Icon(
+                        imageVector = if (attendanceStep == ButtonStep.EDITING) {
+                            Icons.Outlined.Edit
+                        } else {
+                            Icons.Outlined.Save
+                        },
+                        contentDescription = null
+                    )
+                }
             }
         }
     ) { padding ->
