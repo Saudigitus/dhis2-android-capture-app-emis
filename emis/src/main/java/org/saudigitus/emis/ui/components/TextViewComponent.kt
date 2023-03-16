@@ -8,8 +8,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import org.saudigitus.emis.R
+import org.saudigitus.emis.ui.theme.Rubik
 
 @Composable
 fun TextAttributeView(
@@ -27,13 +32,21 @@ fun TextAttributeView(
             text = attribute,
             softWrap = true,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = Rubik,
+            fontSize = 14.sp,
+            fontStyle = FontStyle.Normal,
+            color = colorResource(R.color.textPrimary)
         )
         Text(
             text = attributeValue,
             softWrap = true,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = Rubik,
+            fontSize = 12.sp,
+            fontStyle = FontStyle.Normal,
+            color = colorResource(R.color.textSecondary)
         )
     }
 }

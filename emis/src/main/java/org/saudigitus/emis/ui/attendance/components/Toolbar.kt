@@ -31,6 +31,7 @@ import androidx.compose.ui.window.DialogProperties
 import org.dhis2.commons.date.DateUtils
 import org.saudigitus.emis.R
 import org.saudigitus.emis.ui.components.TextButton
+import org.saudigitus.emis.ui.theme.Rubik
 import org.saudigitus.emis.utils.DateUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,7 +93,7 @@ fun Toolbar(
         ) {
             DatePicker(
                 state = datePickerState,
-                title = { Text(text = stringResource(R.string.attendance_date)) },
+                title = { Text(text = stringResource(R.string.attendance_date), fontFamily = Rubik) },
                 showModeToggle = false
             )
         }
@@ -110,7 +111,8 @@ fun Toolbar(
                     maxLines = 1,
                     fontSize = 18.sp,
                     lineHeight = 24.sp,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = Rubik
                 )
 
                 if (subtitle != null || selectedDate != null) {
@@ -119,7 +121,8 @@ fun Toolbar(
                         style = androidx.compose.material3.MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         fontSize = 14.sp,
-                        lineHeight = 24.sp
+                        lineHeight = 24.sp,
+                        fontFamily = Rubik
                     )
                 }
             }

@@ -50,6 +50,7 @@ import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.ui.attendance.AttendanceUiState
 import org.saudigitus.emis.ui.attendance.AttendanceViewModel
 import org.saudigitus.emis.ui.components.model.AttendanceActions
+import org.saudigitus.emis.ui.theme.Rubik
 import org.saudigitus.emis.utils.Constants.ABSENT
 import org.saudigitus.emis.utils.Constants.LATE
 import org.saudigitus.emis.utils.Constants.PRESENT
@@ -267,7 +268,7 @@ fun ItemTracker(
                     colorFilter = ColorFilter.tint(Color.White)
                 )
                 if (painter == null) {
-                    Text(text = "$icoLetter", color = Color.White)
+                    Text(text = "$icoLetter", color = Color.White, fontFamily = Rubik)
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))

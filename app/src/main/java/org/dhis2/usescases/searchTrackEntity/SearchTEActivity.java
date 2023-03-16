@@ -37,6 +37,7 @@ import org.dhis2.databinding.ActivitySearchBinding;
 import org.dhis2.databinding.SnackbarMinAttrBinding;
 import org.dhis2.form.model.SearchRecords;
 import org.dhis2.form.ui.FormView;
+import org.dhis2.ui.ThemeManager;
 import org.dhis2.usescases.general.ActivityGlobalAbstract;
 import org.dhis2.usescases.searchTrackEntity.listView.SearchTEList;
 import org.dhis2.usescases.searchTrackEntity.mapView.SearchTEMap;
@@ -83,6 +84,9 @@ public class SearchTEActivity extends ActivityGlobalAbstract implements SearchTE
 
     @Inject
     NetworkUtils networkUtils;
+
+    @Inject
+    ThemeManager themeManager;
 
     private static final String INITIAL_PAGE = "initialPage";
 
@@ -189,7 +193,8 @@ public class SearchTEActivity extends ActivityGlobalAbstract implements SearchTE
                 Intent intent = new Intent(this, HomeActivity.class);
                 intent.putExtra("EMIS_FILTER", new FilterSettings(
                         FilterManager.getInstance().getOrgUnitUidsFilters().get(0),
-                        getIntent().getStringExtra("PROGRAM_UID")
+                        getIntent().getStringExtra("PROGRAM_UID"),
+                        themeManager.getProgramTheme()
                 ));
                 startActivity(intent);
             } catch (Exception e) {

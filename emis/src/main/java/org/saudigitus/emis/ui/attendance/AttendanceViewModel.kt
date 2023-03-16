@@ -80,10 +80,14 @@ class AttendanceViewModel
     private val _eventDate = MutableStateFlow("")
     private val eventDate = _eventDate.asStateFlow()
 
+    private val _theme = MutableStateFlow(0)
+    val theme = _theme.asStateFlow()
+
     private val attendanceCache = mutableSetOf<Attendance>()
 
     init {
         val filter = savedStateHandle.get<FilterSettings>(FILTER_INTENT_KEY)
+        _theme.value = filter?.theme ?: R.style.AppTheme
         _attendanceSetting.update { attendance ->
             attendance.copy(program = filter?.program.toString())
         }
