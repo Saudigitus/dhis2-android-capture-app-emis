@@ -3,6 +3,7 @@ package org.dhis2.usescases.searchTrackEntity;
 import static android.view.View.GONE;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -47,6 +49,7 @@ import org.hisp.dhis.android.core.arch.call.D2Progress;
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.saudigitus.emis.HomeActivity;
 import org.saudigitus.emis.data.model.FilterSettings;
+import org.saudigitus.emis.utils.Commons;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -182,12 +185,16 @@ public class SearchTEActivity extends ActivityGlobalAbstract implements SearchTE
         );
 
         binding.attendance.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra("EMIS_FILTER", new FilterSettings(
-                    FilterManager.getInstance().getOrgUnitUidsFilters().get(0),
-                    getIntent().getStringExtra("PROGRAM_UID")
-            ));
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra("EMIS_FILTER", new FilterSettings(
+                        FilterManager.getInstance().getOrgUnitUidsFilters().get(0),
+                        getIntent().getStringExtra("PROGRAM_UID")
+                ));
+                startActivity(intent);
+            } catch (Exception e) {
+                Commons.alertDialog(this);
+            }
         });
 
         configureBottomNavigation();
