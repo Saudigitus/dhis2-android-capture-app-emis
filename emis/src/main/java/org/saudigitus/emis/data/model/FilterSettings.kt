@@ -6,5 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class FilterSettings(
     val ou: String,
-    val program: String
+    val program: String,
+    val theme: Int
 ) : Parcelable

@@ -59,6 +59,7 @@ import org.saudigitus.emis.ui.components.TextButton
 import org.saudigitus.emis.ui.theme.Green
 import org.saudigitus.emis.ui.theme.Orange
 import org.saudigitus.emis.ui.theme.Red
+import org.saudigitus.emis.ui.theme.Rubik
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -163,7 +164,7 @@ fun ReasonForAbsenceDialog(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {
-                            Text(text = reason.displayName().toString())
+                            Text(text = reason.displayName().toString(), fontFamily = Rubik)
                         }
                     }
                 }
@@ -258,7 +259,7 @@ private fun SummaryComponent(
                 contentDescription = title,
                 tint = Color.White
             )
-            Text(text = summary)
+            Text(text = summary, fontFamily = Rubik)
         }
     }
 }
@@ -294,7 +295,8 @@ private fun DialogTemplate(
                 Text(
                     text = title,
                     modifier = Modifier.padding(start = 16.dp),
-                    color = Color.White
+                    color = Color.White,
+                    fontFamily = Rubik
                 )
             }
             content()

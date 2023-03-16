@@ -177,7 +177,6 @@ fun AttendanceScreen(
                                 AttendanceItemState(teis.tei.uid(), attendanceState)
                             } else {
                                 attendanceActions?.let {
-                                    Timber.tag("WQWQ").e("${it.size}")
                                     AttendanceButtons(
                                         viewModel = viewModel,
                                         tei = teis.tei.uid(),

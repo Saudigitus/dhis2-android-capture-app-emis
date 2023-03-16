@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.saudigitus.emis.R
+import org.saudigitus.emis.ui.theme.Rubik
 
 @Composable
 fun TextButton(
@@ -32,7 +33,7 @@ fun TextButton(
             contentColor = contentColor
         )
     ) {
-        Text(text = title)
+        Text(text = title, fontFamily = Rubik)
     }
 }
 

@@ -2,9 +2,18 @@ package org.saudigitus.emis.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import org.saudigitus.emis.R
+
+val Rubik = FontFamily(
+    Font(resId = R.font.rubik_regular),
+    Font(resId = R.font.rubik_light),
+    Font(resId = R.font.rubik_medium),
+    Font(resId = R.font.rubik_bold)
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
