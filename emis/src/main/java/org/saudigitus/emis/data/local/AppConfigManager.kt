@@ -6,6 +6,4 @@ import org.saudigitus.emis.data.model.AppConfig
 interface AppConfigManager {
     suspend fun save(appConfig: AppConfig)
     fun getAppConfigByProgram(program: String): Flow<AppConfig>
-
-    suspend fun isConfigNull(program: String): Boolean
 }
