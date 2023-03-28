@@ -239,7 +239,6 @@ class AttendanceViewModel
                         )
                     }
                     else -> {
-                        Timber.tag("ACTION").e("${it.displayName()} => ${it.code()}")
                         AttendanceActions(
                             icon = resourceManager.getObjectStyleDrawableResource(
                                 null,
