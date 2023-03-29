@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import org.saudigitus.emis.data.local.AppConfigManager
 import org.saudigitus.emis.data.local.AppConfigSerialization
@@ -39,11 +38,4 @@ class AppConfigManagerImpl
             it.programs == program
         }
     }
-
-    override suspend fun isConfigNull(program: String) =
-        withContext(ioDispatcher) {
-            val result = getAppConfigByProgram(program).firstOrNull()
-
-            return@withContext result != null
-        }
 }

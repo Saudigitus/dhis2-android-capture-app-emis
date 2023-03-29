@@ -4,13 +4,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.dhis2.commons.Constants.SERVER
 import org.dhis2.commons.Constants.USER
 import org.dhis2.commons.data.SearchTeiModel
@@ -25,6 +28,7 @@ import org.saudigitus.emis.data.model.AppConfig
 import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.data.model.AttendanceLineList
 import org.saudigitus.emis.data.model.FilterSettings
+import org.saudigitus.emis.data.remote.DataStoreConfig
 import org.saudigitus.emis.service.Basic64AuthInterceptor
 import org.saudigitus.emis.ui.components.model.AttendanceActions
 import org.saudigitus.emis.utils.Constants
@@ -44,6 +48,10 @@ import org.saudigitus.emis.utils.Constants.RED
 import org.saudigitus.emis.utils.Constants.USER_PASS
 import org.saudigitus.emis.utils.Constants.WHITE
 import org.saudigitus.emis.utils.DateUtil
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import timber.log.Timber
 
 @HiltViewModel
 class AttendanceViewModel
@@ -92,6 +100,8 @@ class AttendanceViewModel
             attendance.copy(program = filter?.program.toString())
         }
 
+        authenticate()
+
         getTeis(
             ou = filter?.ou.toString(),
             program = filter?.program.toString()
@@ -108,16 +118,17 @@ class AttendanceViewModel
         }
     }
 
-    fun config() = runBlocking {
-        appConfig
-            .getAppConfigByProgram(attendanceSetting.value.program.toString()).firstOrNull()
+    fun server() = preferenceProvider.getString(SERVER)
+
+    fun config(dataStoreConfig: DataStoreConfig) {
+        viewModelScope.launch {
+            if (attendanceSetting.value.programStage.isNullOrEmpty()) {
+                downloadAndStoreConfig(dataStoreConfig)
+            }
+        }
     }
 
-    fun serverUrl() = preferenceProvider.getString(SERVER)
-
-    fun program() = attendanceSetting.value.program
-
-    fun authenticate() {
+    private fun authenticate() {
         Basic64AuthInterceptor.setCredential(
             username = preferenceProvider.getString(USER).toString(),
             password = preferenceProvider.getString(USER_PASS).toString()
@@ -125,11 +136,13 @@ class AttendanceViewModel
     }
 
     private fun loadConfig(program: String) {
-        val config = runBlocking {
-            appConfig.getAppConfigByProgram(program).firstOrNull()
-        }
-        if (config != null) {
-            composeLineList(config)
+        viewModelScope.launch {
+            val config = appConfig.getAppConfigByProgram(program).firstOrNull()
+            withContext(Dispatchers.Main) {
+                if (config != null) {
+                    composeLineList(config)
+                }
+            }
         }
     }
 
@@ -225,7 +238,14 @@ class AttendanceViewModel
                             actionOrder = ACTION_SORT_THIRD
                         )
                     }
-                    else -> AttendanceActions()
+                    else -> {
+                        AttendanceActions(
+                            icon = resourceManager.getObjectStyleDrawableResource(
+                                null,
+                                R.drawable.ic_empty
+                            )
+                        )
+                    }
                 }
             }
                 ?.sortedWith(compareBy { it.actionOrder })
@@ -371,6 +391,24 @@ class AttendanceViewModel
             contentColor = WHITE
         )
     )
+
+    private fun downloadAndStoreConfig(dataStoreConfig: DataStoreConfig) {
+        dataStoreConfig.getConfig("${attendanceSetting.value.program}")
+            .enqueue(object : Callback<AppConfig> {
+                override fun onResponse(
+                    call: Call<AppConfig>,
+                    response: Response<AppConfig>
+                ) {
+                    saveConfig(response.body())
+                }
+
+                override fun onFailure(call: Call<AppConfig>, t: Throwable) {
+                    call.cancel()
+                    Timber.tag("CONF").e(t)
+                }
+            })
+
+    }
 
     fun clearCache() {
         attendanceCache.clear()
