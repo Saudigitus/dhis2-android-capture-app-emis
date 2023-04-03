@@ -273,6 +273,7 @@ class AttendanceViewModel
                         program = attendanceSetting.value.program.toString(),
                         programStage = attendanceSetting.value.programStage.toString(),
                         dataElement = attendanceSetting.value.dataElement.toString(),
+                        reasonDataElement = attendanceSetting.value.reasonDataElement.toString(),
                         teis = uids,
                         date = date.toString()
                     )
