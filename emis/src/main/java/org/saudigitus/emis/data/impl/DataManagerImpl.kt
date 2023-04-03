@@ -146,6 +146,7 @@ class DataManagerImpl
         program: String,
         programStage: String,
         dataElement: String,
+        reasonDataElement: String?,
         teis: List<String>,
         date: String?
     ) =
@@ -164,16 +165,19 @@ class DataManagerImpl
                 .withTrackedEntityDataValues()
                 .blockingGet()
                 .map {
-                    eventTransform(it, dataElement)
+                    eventTransform(it, dataElement, reasonDataElement)
                 }
         }
 
     private fun eventTransform(
         event: Event,
-        dataElement: String
+        dataElement: String,
+        reasonDataElement: String?,
     ): Attendance? {
-        val dataValues = event.trackedEntityDataValues()?.first()
-        return if (dataValues?.dataElement() == dataElement) {
+        val dataValue = event.trackedEntityDataValues()?.find { it.dataElement() == dataElement }
+        val reason = event.trackedEntityDataValues()?.find { it.dataElement() == reasonDataElement }
+
+        return if (dataValue != null) {
             val tei = d2.enrollmentModule().enrollments()
                 .byUid().eq(event.enrollment().toString())
                 .one().blockingGet()?.trackedEntityInstance()
@@ -181,8 +185,16 @@ class DataManagerImpl
             Attendance(
                 tei = tei.toString(),
                 dataElement = dataElement,
-                value = dataValues.value().toString(),
-                date = DateUtil.formatDate(event.eventDate()?.time ?: 0).toString()
+                value = dataValue.value().toString(),
+                reasonDataElement = if (reason == null) {
+                    null
+                } else {
+                    reasonDataElement
+                },
+                reasonOfAbsence = reason?.value(),
+                date = DateUtil.formatDate(
+                    event.eventDate()?.time ?: DateUtils.getInstance().today.time
+                ).toString()
             )
         } else null
     }

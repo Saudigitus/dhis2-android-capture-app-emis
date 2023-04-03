@@ -260,6 +260,7 @@ class AttendanceViewModel
     fun attendanceEvents(
         date: String? = DateUtil.formatDate(DateUtils.getInstance().today.time)
     ) {
+        Timber.tag("AQS").e("")
         _eventDate.value = date.toString()
         viewModelScope.launch {
             searchTeiModel.collect {
@@ -276,11 +277,15 @@ class AttendanceViewModel
                         date = date.toString()
                     )
                 }
-                clearCache()
-                attendanceList.value?.let { data ->
-                    attendanceCache.addAll(data.requireNoNulls())
+                try {
+                    clearCache()
+                    attendanceList.value?.let { data ->
+                        attendanceCache.addAll(data.requireNoNulls())
+                    }
+                    setInitialAttendanceStatus()
+                } catch (e: Exception) {
+                    Timber.tag("ATTENDANCE_DATA").e(e)
                 }
-                setInitialAttendanceStatus()
             }
         }
     }
