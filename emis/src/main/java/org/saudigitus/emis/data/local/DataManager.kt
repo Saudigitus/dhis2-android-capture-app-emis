@@ -18,6 +18,7 @@ interface DataManager {
         program: String,
         programStage: String,
         dataElement: String,
+        reasonDataElement: String? = null,
         teis: List<String>,
         date: String?
     ): List<Attendance?>
