@@ -17,10 +17,12 @@ import kotlinx.coroutines.withContext
 import org.dhis2.commons.Constants.SERVER
 import org.dhis2.commons.Constants.USER
 import org.dhis2.commons.data.SearchTeiModel
+import org.dhis2.commons.data.tuples.Trio
 import org.dhis2.commons.date.DateUtils
 import org.dhis2.commons.prefs.PreferenceProvider
 import org.dhis2.commons.resources.ResourceManager
 import org.hisp.dhis.android.core.option.Option
+import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstance
 import org.saudigitus.emis.R
 import org.saudigitus.emis.data.local.AppConfigManager
 import org.saudigitus.emis.data.local.DataManager
@@ -28,6 +30,7 @@ import org.saudigitus.emis.data.model.AppConfig
 import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.data.model.AttendanceLineList
 import org.saudigitus.emis.data.model.FilterSettings
+import org.saudigitus.emis.data.model.TeiAttribute
 import org.saudigitus.emis.data.remote.DataStoreConfig
 import org.saudigitus.emis.service.Basic64AuthInterceptor
 import org.saudigitus.emis.ui.components.model.AttendanceActions
@@ -188,6 +191,23 @@ class AttendanceViewModel
             _searchTeiModel.value = dataManager.trackedEntityInstances(ou, program)
         }
     }
+
+    fun teiAttributes(
+        tei: SearchTeiModel
+    ) = Trio.create(
+        Pair(
+            tei.attributeValues.keys.toList().getOrElse(0) { "" },
+            tei.attributeValues.values.toList().getOrNull(0)?.value()
+        ),
+        Pair(
+            tei.attributeValues.keys.toList().getOrElse(1) { "" },
+            tei.attributeValues.values.toList().getOrNull(1)?.value() ?: ""
+        ),
+        Pair(
+            tei.attributeValues.keys.toList().getOrElse(2) { "" },
+            tei.attributeValues.values.toList().getOrNull(2)?.value() ?: ""
+        )
+    )
 
     private fun getReasonForAbsence(dataElement: String) {
         viewModelScope.launch {

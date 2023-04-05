@@ -119,7 +119,7 @@ class DataManagerImpl
             val repository = d2.trackedEntityModule().trackedEntityInstanceQuery()
 
             return@withContext if (NetworkUtils.isOnline(context)) {
-                repository.onlineFirst().allowOnlineCache().eq(true)
+                repository.allowOnlineCache().eq(true).offlineFirst()
                     .byOrgUnits().eq(ou)
                     .byProgram().eq(program)
                     .blockingGet()
@@ -129,8 +129,7 @@ class DataManagerImpl
                         transform(tei, program)
                     }
             } else {
-                repository
-                    .offlineOnly().allowOnlineCache().eq(false)
+                repository.allowOnlineCache().eq(false).offlineOnly()
                     .byOrgUnits().eq(ou)
                     .byProgram().eq(program)
                     .blockingGet()
