@@ -8,9 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +20,6 @@ import org.dhis2.commons.date.DateUtils
 import org.dhis2.commons.prefs.PreferenceProvider
 import org.dhis2.commons.resources.ResourceManager
 import org.hisp.dhis.android.core.option.Option
-import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstance
 import org.saudigitus.emis.R
 import org.saudigitus.emis.data.local.AppConfigManager
 import org.saudigitus.emis.data.local.DataManager
@@ -30,7 +27,6 @@ import org.saudigitus.emis.data.model.AppConfig
 import org.saudigitus.emis.data.model.Attendance
 import org.saudigitus.emis.data.model.AttendanceLineList
 import org.saudigitus.emis.data.model.FilterSettings
-import org.saudigitus.emis.data.model.TeiAttribute
 import org.saudigitus.emis.data.remote.DataStoreConfig
 import org.saudigitus.emis.service.Basic64AuthInterceptor
 import org.saudigitus.emis.ui.components.model.AttendanceActions
@@ -197,7 +193,7 @@ class AttendanceViewModel
     ) = Trio.create(
         Pair(
             tei.attributeValues.keys.toList().getOrElse(0) { "" },
-            tei.attributeValues.values.toList().getOrNull(0)?.value()
+            tei.attributeValues.values.toList().getOrNull(0)?.value() ?: ""
         ),
         Pair(
             tei.attributeValues.keys.toList().getOrElse(1) { "" },
