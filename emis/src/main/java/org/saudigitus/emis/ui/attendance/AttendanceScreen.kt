@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.dhis2.commons.data.SearchTeiModel
 import org.saudigitus.emis.R
 import org.saudigitus.emis.ui.attendance.components.AttendanceSummaryDialog
 import org.saudigitus.emis.ui.attendance.components.ReasonForAbsenceDialog
@@ -160,7 +161,10 @@ fun AttendanceScreen(
             searchTeiModels?.forEach { teis ->
                 item {
                     ItemTracker(
-                        icoLetter = "${teis.attributeValues.values.toList()[0].value()?.first()}",
+                        icoLetter = "${
+                            teis.attributeValues.values.toList().getOrNull(0)
+                                ?.value()?.firstOrNull() ?: ""
+                        }",
                         themeColor = MaterialTheme.colors.primary,
                         onClick = {}
                     ) {
@@ -169,25 +173,7 @@ fun AttendanceScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                TextAttributeView(
-                                    attribute = teis.attributeValues.keys.toList()[0],
-                                    attributeValue = "${teis.attributeValues.values.toList()[0].value()}"
-                                )
-
-                                TextAttributeView(
-                                    attribute = teis.attributeValues.keys.toList()[1],
-                                    attributeValue = "${teis.attributeValues.values.toList()[1].value()}"
-                                )
-
-                                TextAttributeView(
-                                    attribute = teis.attributeValues.keys.toList()[2],
-                                    attributeValue = "${teis.attributeValues.values.toList()[2].value()}"
-                                )
-                            }
+                            AttributeMapper(teiModel = teis, viewModel = viewModel)
 
                             if (attendanceStep == ButtonStep.EDITING) {
                                 AttendanceItemState(teis.tei.uid(), attendanceState)
@@ -219,6 +205,35 @@ fun AttendanceScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun AttributeMapper(
+    teiModel: SearchTeiModel,
+    viewModel: AttendanceViewModel
+) {
+    val teiAttributes = viewModel.teiAttributes(teiModel)
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {
+
+        teiAttributes.let {
+            TextAttributeView(
+                attribute = "${it.val0()?.first}",
+                attributeValue = "${it.val0()?.second}"
+            )
+            TextAttributeView(
+                attribute = "${it.val1()?.first}",
+                attributeValue = "${it.val1()?.second}"
+            )
+            TextAttributeView(
+                attribute = "${it.val2()?.first}",
+                attributeValue = "${it.val2()?.second}"
+            )
         }
     }
 }
